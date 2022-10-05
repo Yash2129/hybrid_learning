@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -323,6 +325,7 @@ class _StudentRegistrationState extends State<StudentRegistration> {
 
                       else{
                         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Enter Valid Email Id")));
+
                       }
 
                     },
