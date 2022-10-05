@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "61786182324",
+    "project_id": "hybrid-learning",
+    "storage_bucket": "hybrid-learning.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:61786182324:android:94b6136c59a2fb92d97de1",
+        "android_client_info": {
+          "package_name": "com.example.hybrid_learning_application"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "61786182324-b0rpibhcf55a6bagpec1la69k9s1f38j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAX4LYm8JAnSqDLBANbK6MCwi7B3i-WP1A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "61786182324-b0rpibhcf55a6bagpec1la69k9s1f38j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
