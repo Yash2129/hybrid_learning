@@ -1,34 +1,22 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:hybrid_learning_application/student/StudentLogin.dart';
+import 'package:flutter/material.dart';
+import 'package:hybrid_learning_application/faculty/FacultyLogin.dart';
 
-
-
-
-class StudentRegistration extends StatefulWidget {
-  const StudentRegistration({Key? key}) : super(key: key);
+class FacultyRegistration extends StatefulWidget {
+  const FacultyRegistration({Key? key}) : super(key: key);
 
   @override
-  State<StudentRegistration> createState() => _StudentRegistrationState();
+  State<FacultyRegistration> createState() => _FacultyRegistrationState();
 }
 
-class _StudentRegistrationState extends State<StudentRegistration> {
-
-
-
-
+class _FacultyRegistrationState extends State<FacultyRegistration> {
   @override
   Widget build(BuildContext context) {
-
-
     TextEditingController _emailController = TextEditingController();
     TextEditingController _passwordController = TextEditingController();
     TextEditingController _fullNameController = TextEditingController();
-    TextEditingController _classController = TextEditingController();
     TextEditingController _idController = TextEditingController();
-    TextEditingController _rollNoController = TextEditingController();
     TextEditingController _confirmPasswordController = TextEditingController();
     return Container(
 
@@ -48,7 +36,7 @@ class _StudentRegistrationState extends State<StudentRegistration> {
                 Container(
                   alignment: Alignment.center,
                   padding: const EdgeInsets.only(top: 10),
-                  child: const Text('Student Registration',style: TextStyle(
+                  child: const Text('Faculty Registration',style: TextStyle(
                       color: Colors.black,
                       fontSize: 33,
                       fontWeight: FontWeight.w800,
@@ -122,71 +110,10 @@ class _StudentRegistrationState extends State<StudentRegistration> {
                     ),
                   ),
                 ),
-                Container(
-                  padding: const EdgeInsets.only(left: 25,right: 25,top: 20,bottom: 10),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                      boxShadow: [BoxShadow(
-                          color: Color(0xFFE3E3E3),
-                          blurRadius: 40,
-                          offset: Offset(0,20)
-                      )]
-                  ),
-                  child: TextField(
-                    controller: _rollNoController,
-                    keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Color(0x80E3E3E3)),
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.blue),
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                      ),
-
-                      prefixIcon: Icon(Icons.numbers),
-                      hintText: "Roll Number",
-                      filled: true,
-                      fillColor: Colors.white,
-
-                    ),
-                  ),
-                ),
 
 
-                Container(
-                  padding: const EdgeInsets.only(left: 25,right: 25,top: 20,bottom: 10),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                      boxShadow: [BoxShadow(
-                          color: Color(0xFFE3E3E3),
-                          blurRadius: 40,
-                          offset: Offset(0,20)
-                      )]
-                  ),
-                  child: TextField(
 
-                    controller: _classController,
-                    keyboardType: TextInputType.text,
-                    decoration: const InputDecoration(
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Color(0x80E3E3E3)),
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.blue),
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                      ),
 
-                      prefixIcon: Icon(Icons.account_balance_sharp),
-                      hintText: "Class (Example: BE-A)",
-                      filled: true,
-                      fillColor: Colors.white,
-
-                    ),
-                  ),
-                ),
                 Container(
                   padding: const EdgeInsets.only(left: 25,right: 25,top: 20,bottom: 10),
                   decoration: BoxDecoration(
@@ -314,10 +241,10 @@ class _StudentRegistrationState extends State<StudentRegistration> {
                       var gmail = email.split('@');
                       var id = _idController.text.toLowerCase();
                       bool found = gmail[0].contains(id);
-                      if(found==true){
+                      if(found==false){
                         FirebaseAuth.instance.createUserWithEmailAndPassword(email: _emailController.text, password: _passwordController.text).then((value){
-                          FirebaseFirestore.instance.collection('Student').doc(value.user?.uid).set({"StudentName":_fullNameController.text,"email": value.user?.email, "password": _passwordController.text, "CollegeId": _idController.text, "Class": _classController.text,"RollNo": _rollNoController.text});
-                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> StudentLogin()));
+                          FirebaseFirestore.instance.collection('Faculty').doc(value.user?.uid).set({"FacultyName":_fullNameController.text,"email": value.user?.email, "password": _passwordController.text, "CollegeId": _idController.text});
+                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> FacultyLogin()));
                         });
                       }
 

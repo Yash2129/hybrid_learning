@@ -230,10 +230,10 @@ class _StudentLoginScreenState extends State<StudentLoginScreen> {
                   child: Container(
                     alignment: Alignment.center,
                     padding: const EdgeInsets.only(top: 20),
-                    child: const Text('Student Login',style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 24,
-                        fontWeight: FontWeight.w900,
+                    child: const Text('Do not have an account? Register',style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w100,
                         fontFamily: 'Quicksand_Bold'
                     ),),
                   ),

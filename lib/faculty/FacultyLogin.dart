@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hybrid_learning_application/faculty/FacultyMainScreen.dart';
+import 'package:hybrid_learning_application/faculty/FacultyRegistration.dart';
 
 class FacultyLogin extends StatefulWidget {
   const FacultyLogin({Key? key}) : super(key: key);
@@ -216,6 +217,21 @@ class _FacultyLoginScreenState extends State<FacultyLoginScreen> {
                 ),
 
 
+                InkWell(
+                  child: Container(
+                    alignment: Alignment.center,
+                    padding: const EdgeInsets.only(top: 20),
+                    child: const Text('Do not have an account? Register',style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w100,
+                        fontFamily: 'Quicksand_Bold'
+                    ),),
+                  ),
+                  onTap: () {
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=> const FacultyRegistration()));
+                  },
+                )
               ],
             ),
           )

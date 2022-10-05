@@ -1,28 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:hybrid_learning_application/student/StudentLogin.dart';
+import 'package:flutter/material.dart';
+import 'package:hybrid_learning_application/parent/ParentLogin.dart';
 
-
-
-
-class StudentRegistration extends StatefulWidget {
-  const StudentRegistration({Key? key}) : super(key: key);
+class ParentsRegistration extends StatefulWidget {
+  const ParentsRegistration({Key? key}) : super(key: key);
 
   @override
-  State<StudentRegistration> createState() => _StudentRegistrationState();
+  State<ParentsRegistration> createState() => _ParentsRegistrationState();
 }
 
-class _StudentRegistrationState extends State<StudentRegistration> {
-
-
-
-
+class _ParentsRegistrationState extends State<ParentsRegistration> {
   @override
   Widget build(BuildContext context) {
-
-
     TextEditingController _emailController = TextEditingController();
     TextEditingController _passwordController = TextEditingController();
     TextEditingController _fullNameController = TextEditingController();
@@ -48,7 +38,7 @@ class _StudentRegistrationState extends State<StudentRegistration> {
                 Container(
                   alignment: Alignment.center,
                   padding: const EdgeInsets.only(top: 10),
-                  child: const Text('Student Registration',style: TextStyle(
+                  child: const Text('Parent Registration',style: TextStyle(
                       color: Colors.black,
                       fontSize: 33,
                       fontWeight: FontWeight.w800,
@@ -312,12 +302,11 @@ class _StudentRegistrationState extends State<StudentRegistration> {
 
                       String email = _emailController.text;
                       var gmail = email.split('@');
-                      var id = _idController.text.toLowerCase();
-                      bool found = gmail[0].contains(id);
-                      if(found==true){
+
+                      if(gmail[1]=='gmail.com'){
                         FirebaseAuth.instance.createUserWithEmailAndPassword(email: _emailController.text, password: _passwordController.text).then((value){
-                          FirebaseFirestore.instance.collection('Student').doc(value.user?.uid).set({"StudentName":_fullNameController.text,"email": value.user?.email, "password": _passwordController.text, "CollegeId": _idController.text, "Class": _classController.text,"RollNo": _rollNoController.text});
-                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> StudentLogin()));
+                          FirebaseFirestore.instance.collection('Parents').doc(value.user?.uid).set({"ParentName":_fullNameController.text,"email": value.user?.email, "password": _passwordController.text, "StudentCollegeId": _idController.text, "StudentClass": _classController.text,"StudentRollNo": _rollNoController.text});
+                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> ParentsLogin()));
                         });
                       }
 
