@@ -215,7 +215,7 @@ class _StudentLoginScreenState extends State<StudentLoginScreen> {
                       bool found = gmail[0].contains(RegExp(r'[0-9]'));
                       if(user!=null && found==true){
                         Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=> const StudentMainScreen()));
-                        FirebaseFirestore.instance.collection('Student').doc(_auth.currentUser?.uid).set({"email":_auth.currentUser?.email,"uid":_auth.currentUser?.uid});
+                        FirebaseFirestore.instance.collection('Student').doc(_auth.currentUser?.uid);
 
                       }
                       else{

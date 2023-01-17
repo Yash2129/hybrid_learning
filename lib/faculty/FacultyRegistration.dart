@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:hybrid_learning_application/faculty/FacultyLogin.dart';
 
@@ -13,10 +14,13 @@ class FacultyRegistration extends StatefulWidget {
 class _FacultyRegistrationState extends State<FacultyRegistration> {
   @override
   Widget build(BuildContext context) {
+    FirebaseDatabase database = FirebaseDatabase.instance;
+    DatabaseReference ref = database.ref("Faculty");
     TextEditingController _emailController = TextEditingController();
     TextEditingController _passwordController = TextEditingController();
     TextEditingController _fullNameController = TextEditingController();
     TextEditingController _idController = TextEditingController();
+    TextEditingController _branchController = TextEditingController();
     TextEditingController _confirmPasswordController = TextEditingController();
     return Container(
 
@@ -156,6 +160,38 @@ class _FacultyRegistrationState extends State<FacultyRegistration> {
                       )]
                   ),
                   child: TextField(
+                    controller: _branchController,
+                    keyboardType: TextInputType.text,
+                    decoration: const InputDecoration(
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Color(0x80E3E3E3)),
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.blue),
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                      ),
+
+                      prefixIcon: Icon(Icons.account_tree),
+
+                      hintText: "Branch (Eg: Computer, Mechanical,...)",
+                      filled: true,
+                      fillColor: Colors.white,
+
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.only(left: 25,right: 25,top: 20,bottom: 10),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      boxShadow: [BoxShadow(
+                          color: Color(0xFFE3E3E3),
+                          blurRadius: 40,
+                          offset: Offset(0,20)
+                      )]
+                  ),
+                  child: TextField(
                     controller: _passwordController,
                     keyboardType: TextInputType.visiblePassword,
                     decoration: const InputDecoration(
@@ -240,12 +276,26 @@ class _FacultyRegistrationState extends State<FacultyRegistration> {
                       String email = _emailController.text;
                       var gmail = email.split('@');
                       var id = _idController.text.toLowerCase();
+                      var branch = _branchController.text;
+                      var id2 = _idController.text;
+                      DatabaseReference child1 = ref.child(branch);
                       bool found = gmail[0].contains(id);
                       if(found==false){
-                        FirebaseAuth.instance.createUserWithEmailAndPassword(email: _emailController.text, password: _passwordController.text).then((value){
-                          FirebaseFirestore.instance.collection('Faculty').doc(value.user?.uid).set({"FacultyName":_fullNameController.text,"email": value.user?.email, "password": _passwordController.text, "CollegeId": _idController.text});
+                        FirebaseAuth.instance.createUserWithEmailAndPassword(email: _emailController.text, password: _passwordController.text).then((value) async {
+                          await child1.child(id2).set({
+                            "UID": value.user?.uid,
+                            "FacultyName":_fullNameController.text,
+                            "email": value.user?.email,
+                            "Branch": _branchController.text,
+                            "password": _passwordController.text,
+                            "CollegeId": _idController.text
+                          });
                           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> FacultyLogin()));
                         });
+
+
+
+
                       }
 
                       else{

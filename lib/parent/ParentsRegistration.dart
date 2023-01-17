@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:hybrid_learning_application/parent/ParentLogin.dart';
 
@@ -13,6 +14,8 @@ class ParentsRegistration extends StatefulWidget {
 class _ParentsRegistrationState extends State<ParentsRegistration> {
   @override
   Widget build(BuildContext context) {
+    FirebaseDatabase database = FirebaseDatabase.instance;
+    DatabaseReference ref = database.ref("Parents");
     TextEditingController _emailController = TextEditingController();
     TextEditingController _passwordController = TextEditingController();
     TextEditingController _fullNameController = TextEditingController();
@@ -302,10 +305,21 @@ class _ParentsRegistrationState extends State<ParentsRegistration> {
 
                       String email = _emailController.text;
                       var gmail = email.split('@');
+                      var classDiv = _classController.text;
+                      DatabaseReference child1 = ref.child(classDiv);
+                      var rollno = _rollNoController.text;
 
                       if(gmail[1]=='gmail.com'){
-                        FirebaseAuth.instance.createUserWithEmailAndPassword(email: _emailController.text, password: _passwordController.text).then((value){
-                          FirebaseFirestore.instance.collection('Parents').doc(value.user?.uid).set({"ParentName":_fullNameController.text,"email": value.user?.email, "password": _passwordController.text, "StudentCollegeId": _idController.text, "StudentClass": _classController.text,"StudentRollNo": _rollNoController.text});
+                        FirebaseAuth.instance.createUserWithEmailAndPassword(email: _emailController.text, password: _passwordController.text).then((value) async {
+
+                          await child1.child(rollno).set({
+                            "ParentName":_fullNameController.text,
+                            "email": _emailController.text,
+                            "password": _passwordController.text,
+                            "StudentCollegeId": _idController.text,
+                            "StudentRollNo": _rollNoController.text,
+                            "UID": value.user?.uid
+                          });
                           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> ParentsLogin()));
                         });
                       }
