@@ -335,6 +335,12 @@ class _StudentRegistrationState extends State<StudentRegistration> {
                             "UID": value.user?.uid
                           });
 
+                          final snapshot = await child1.child(rollno).get();
+                          if (snapshot.exists) {
+                            print(snapshot.value);
+                          }else {
+                            print('No data available.');
+                          }
 
                           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> StudentLogin()));
                         });

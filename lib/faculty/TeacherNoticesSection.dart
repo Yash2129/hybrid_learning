@@ -25,17 +25,43 @@ class _TeacherNoticesSectionState extends State<TeacherNoticesSection> {
 
 
           //Circular Section
-          Container(
-            padding: EdgeInsets.only(left:20,bottom: 10,top: 30),
-            alignment: Alignment.topLeft,
-            child: const Text('Circulars',style: TextStyle(
-              fontSize: 25,
-              fontFamily: 'Quicksand_Bold',
-              fontWeight: FontWeight.w900,
-              color: Color(0xFF244462),
-            ),),
+          Row(
+            children: [
+              Container(
+                padding: EdgeInsets.only(left:20,bottom: 10,top: 30),
+                alignment: Alignment.topLeft,
+                child: const Text('Circulars',style: TextStyle(
+                  fontSize: 25,
+                  fontFamily: 'Quicksand_Bold',
+                  fontWeight: FontWeight.w900,
+                  color: Color(0xFF244462),
+                ),),
 
+              ),
+
+              Container(
+
+                padding: EdgeInsets.only(left: 50, right: 20,top: 15),
+                child: OutlinedButton(
+                  style: OutlinedButton.styleFrom(
+                      elevation: 6,
+                      padding: EdgeInsets.only(left: 10,right: 10),
+                      backgroundColor: const Color(0xFF0090FF),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10))),
+                  child: const Text(
+
+                      'Circular Upload',textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 20, color: Colors.white,fontFamily: 'Quicksand_Bold',)
+                  ),
+                  onPressed: () {
+
+                  },
+                ),
+              ),
+            ],
           ),
+
 
           Container(
             height: height*0.33,
@@ -54,18 +80,45 @@ class _TeacherNoticesSectionState extends State<TeacherNoticesSection> {
           ),
 
 
-          // Notices
-          Container(
-            padding: const EdgeInsets.only(left:20,top: 40),
-            alignment: Alignment.topLeft,
-            child: const Text('Notices',style: TextStyle(
-              fontSize: 25,
-              fontFamily: 'Quicksand_Bold',
-              fontWeight: FontWeight.w900,
-              color: Color(0xFF244462),
-            ),),
+          Row(
+            children: [
 
+              Container(
+                padding: const EdgeInsets.only(left:20,top: 40, bottom: 20),
+                alignment: Alignment.topLeft,
+                child: const Text('Notices',style: TextStyle(
+                  fontSize: 25,
+                  fontFamily: 'Quicksand_Bold',
+                  fontWeight: FontWeight.w900,
+                  color: Color(0xFF244462),
+                ),),
+
+              ),
+
+              Container(
+
+                padding: EdgeInsets.only(left: 70, right: 20,top: 15),
+                child: OutlinedButton(
+                  style: OutlinedButton.styleFrom(
+                      elevation: 6,
+                      padding: EdgeInsets.only(left: 10,right: 10),
+                      backgroundColor: const Color(0xFF0090FF),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10))),
+                  child: const Text(
+
+                      'Notices Upload',textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 20, color: Colors.white,fontFamily: 'Quicksand_Bold',)
+                  ),
+                  onPressed: () {
+
+                  },
+                ),
+              ),
+            ],
           ),
+          // Notices
+
           Container(
             height: height*0.33,
             width: width*0.9,
