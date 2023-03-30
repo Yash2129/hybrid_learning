@@ -1,5 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:hybrid_learning_application/parent/ParentProfileView.dart';
+
+import 'ParentProfileView.dart';
 
 class ParentsSettings extends StatefulWidget {
   const ParentsSettings({Key? key}) : super(key: key);
@@ -19,8 +22,11 @@ class _ParentsSettingsState extends State<ParentsSettings> {
       await _auth.signOut();
     }
 
-    return Container(
-      padding: const EdgeInsets.only(top: 410),
+    return Scaffold(
+    body: Column(
+      children: [
+    Container(
+    padding: const EdgeInsets.only(top: 410),
       color: Colors.white,
       alignment: Alignment.topCenter,
       child: OutlinedButton(
@@ -32,14 +38,40 @@ class _ParentsSettingsState extends State<ParentsSettings> {
                 borderRadius: BorderRadius.circular(15))),
         child: const Text(
 
-            'Logout',textAlign: TextAlign.center,
+            'Profile',textAlign: TextAlign.center,
             style: TextStyle(fontSize: 20, color: Colors.white,fontFamily: 'Quicksand_Bold',)
         ),
         onPressed: () {
-          _auth.signOut();
-          Navigator.popUntil(context, ModalRoute.withName('loginOptions'));
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> ParentProfileView()));
         },
       ),
+    ), SizedBox(
+    width: 30,
+    height: 30,
+    ),
+        Container(
+          color: Colors.white,
+          alignment: Alignment.topCenter,
+          child: OutlinedButton(
+            style: OutlinedButton.styleFrom(
+                elevation: 6,
+                padding: const EdgeInsets.symmetric(horizontal: 90, vertical: 12),
+                backgroundColor: const Color(0xFF0090FF),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15))),
+            child: const Text(
+
+                'Logout',textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 20, color: Colors.white,fontFamily: 'Quicksand_Bold',)
+            ),
+            onPressed: () {
+              _auth.signOut();
+              Navigator.popUntil(context, ModalRoute.withName('loginOptions'));
+            },
+          ),
+        ),
+      ],
+    ),
     );
   }
 }

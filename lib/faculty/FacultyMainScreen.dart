@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hybrid_learning_application/faculty/FacultyProfileView.dart';
 import 'package:hybrid_learning_application/faculty/FacultySettings.dart';
 import 'package:hybrid_learning_application/faculty/TeacherAttendanceSection.dart';
 import 'package:hybrid_learning_application/faculty/TeacherCourseSection.dart';
@@ -10,13 +11,16 @@ import 'package:hybrid_learning_application/faculty/TeacherOnlineResources.dart'
 import 'ParentsInteractionSection.dart';
 
 class FacultyMainScreen extends StatefulWidget {
-  const FacultyMainScreen({Key? key}) : super(key: key);
+
+  const FacultyMainScreen({Key? key,}) : super(key: key);
 
   @override
   State<FacultyMainScreen> createState() => _FacultyMainScreenState();
+
 }
 
 class _FacultyMainScreenState extends State<FacultyMainScreen> {
+
   @override
   Widget build(BuildContext context) {
 
@@ -285,7 +289,7 @@ class _FacultyMainScreenState extends State<FacultyMainScreen> {
                 InkWell(
                   onTap: () => Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const TeacherExaminationSection()),
+                    MaterialPageRoute(builder: (context) => TeacherExaminationSection()),
                   ),
                   child: Container(
                     height: 230,

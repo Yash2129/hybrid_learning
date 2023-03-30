@@ -1,8 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hybrid_learning_application/student/StudentLogin.dart';
-
 
 
 
@@ -23,10 +24,6 @@ class _StudentRegistrationState extends State<StudentRegistration> {
   Widget build(BuildContext context) {
 
 
-
-
-    FirebaseDatabase database = FirebaseDatabase.instance;
-    DatabaseReference ref = database.ref("Students");
     TextEditingController _emailController = TextEditingController();
     TextEditingController _passwordController = TextEditingController();
     TextEditingController _fullNameController = TextEditingController();
@@ -313,48 +310,52 @@ class _StudentRegistrationState extends State<StudentRegistration> {
                         style: TextStyle(fontSize: 20, color: Colors.white,fontFamily: 'Quicksand_Bold')
                     ),
                     onPressed: () async{
-
-
+                      /*FirebaseAuth.instance.createUserWithEmailAndPassword(
+                          email: _emailController.text, password: _passwordController.text)
+                          .then((value) {
+                            print("Created New Student");
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => StudentLogin()));
+                      }).onError((error, stackTrace) {
+                        print("Error ${error.toString()}");
+                      });*/
                       String email = _emailController.text;
                       var gmail = email.split('@');
                       var id = _idController.text.toLowerCase();
-                      var classDiv = _classController.text;
-                      var rollno = _rollNoController.text;
+                      var classDiv= _classController.text;
+                      var rollno= _rollNoController.text;
                       bool found = gmail[0].contains(id);
-                      DatabaseReference child1 = ref.child(classDiv);
                       if(found==true){
-
-
+                        FirebaseDatabase database = FirebaseDatabase.instance;
+                        DatabaseReference ref = database.ref("Students");
+                        DatabaseReference child1 = ref.child(classDiv);
                         FirebaseAuth.instance.createUserWithEmailAndPassword(email: _emailController.text, password: _passwordController.text).then((value) async {
                           await child1.child(rollno).set({
                             "StudentName":_fullNameController.text,
                             "email": _emailController.text,
                             "password": _passwordController.text,
                             "CollegeId": _idController.text,
+                            "Class":_classController.text,
+                            "RollNo": _rollNoController.text,
+                            "UID": value.user?.uid
+                          });//add from here
+                          var u=value.user?.uid;
+                          await database.ref("Profiles").child(u!).set({
+                            "StudentName":_fullNameController.text,
+                            "email": _emailController.text,
+                            "password": _passwordController.text,
+                            "CollegeId": _idController.text,
+                            "Class":_classController.text,
                             "RollNo": _rollNoController.text,
                             "UID": value.user?.uid
                           });
 
-                          final snapshot = await child1.child(rollno).get();
-                          if (snapshot.exists) {
-                            print(snapshot.value);
-                          }else {
-                            print('No data available.');
-                          }
-
+                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Student info created")));
                           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> StudentLogin()));
                         });
-
-
-
-
-
-
                       }
 
                       else{
                         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Enter Valid Email Id")));
-
                       }
 
                     },

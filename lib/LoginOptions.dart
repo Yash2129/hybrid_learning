@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hybrid_learning_application/student/StudentLogin.dart';
 import 'package:hybrid_learning_application/faculty/FacultyLogin.dart';
 import 'package:hybrid_learning_application/parent/ParentLogin.dart';
 import 'package:hybrid_learning_application/student/StudentLogin.dart';
@@ -16,8 +17,8 @@ class _LoginOptionsState extends State<LoginOptions> {
     return Container(
 
       decoration: const BoxDecoration(
-        image: DecorationImage(
-            image: AssetImage('assets/images/loginbg.png'),filterQuality: FilterQuality.high,fit: BoxFit.cover)),
+          image: DecorationImage(
+              image: AssetImage('assets/images/loginbg.png'),filterQuality: FilterQuality.high,fit: BoxFit.cover)),
 
       child: Scaffold(
         backgroundColor: Colors.transparent,
@@ -28,10 +29,10 @@ class _LoginOptionsState extends State<LoginOptions> {
             Container(
               padding: const EdgeInsets.only(left: 15,top: 310),
               child: const Text('Welcome',style: TextStyle(
-                color: Colors.black,
-                fontSize: 33,
-                fontWeight: FontWeight.w900,
-                fontFamily: 'Quicksand_Bold'
+                  color: Colors.black,
+                  fontSize: 33,
+                  fontWeight: FontWeight.w900,
+                  fontFamily: 'Quicksand_Bold'
               ),),
             ),
 
@@ -48,8 +49,8 @@ class _LoginOptionsState extends State<LoginOptions> {
                         borderRadius: BorderRadius.circular(15))),
                 child: const Text(
 
-                  'Student Login',textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 20, color: Colors.white,fontFamily: 'Quicksand_Bold',)
+                    'Student Login',textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 20, color: Colors.white,fontFamily: 'Quicksand_Bold',)
                 ),
                 onPressed: () {
                   Navigator.push(
