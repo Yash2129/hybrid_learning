@@ -14,8 +14,6 @@ class ParentsRegistration extends StatefulWidget {
 class _ParentsRegistrationState extends State<ParentsRegistration> {
   @override
   Widget build(BuildContext context) {
-    FirebaseDatabase database = FirebaseDatabase.instance;
-    DatabaseReference ref = database.ref("Parents");
     TextEditingController _emailController = TextEditingController();
     TextEditingController _passwordController = TextEditingController();
     TextEditingController _fullNameController = TextEditingController();
@@ -305,13 +303,13 @@ class _ParentsRegistrationState extends State<ParentsRegistration> {
 
                       String email = _emailController.text;
                       var gmail = email.split('@');
-                      var classDiv = _classController.text;
-                      DatabaseReference child1 = ref.child(classDiv);
-                      var rollno = _rollNoController.text;
-
+                      var classDiv= _classController.text;
+                      var rollno= _rollNoController.text;
                       if(gmail[1]=='gmail.com'){
+                        FirebaseDatabase database = FirebaseDatabase.instance;
+                        DatabaseReference ref = database.ref("Parents");
+                        DatabaseReference child1 = ref.child(classDiv);
                         FirebaseAuth.instance.createUserWithEmailAndPassword(email: _emailController.text, password: _passwordController.text).then((value) async {
-
                           await child1.child(rollno).set({
                             "ParentName":_fullNameController.text,
                             "email": _emailController.text,
@@ -319,7 +317,19 @@ class _ParentsRegistrationState extends State<ParentsRegistration> {
                             "StudentCollegeId": _idController.text,
                             "StudentRollNo": _rollNoController.text,
                             "UID": value.user?.uid
+                          });//add from here
+                          var u=value.user?.uid;
+                          await database.ref("Profiles").child(u!).set({
+                            "ParentName":_fullNameController.text,
+                            "email": _emailController.text,
+                            "password": _passwordController.text,
+                            "StudentCollegeId": _idController.text,
+                            "StudentRollNo": _rollNoController.text,
+                            "UID": value.user?.uid,
+                            "Class":_classController.text,
                           });
+
+                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Parent data Created")));
                           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> ParentsLogin()));
                         });
                       }

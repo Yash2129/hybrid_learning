@@ -207,7 +207,7 @@ class _FacultyLoginScreenState extends State<FacultyLoginScreen> {
                       var gmail = email.split('@');
                       bool found = gmail[0].contains(RegExp(r'[0-9]'));
                       if(user!=null && found==false){
-                        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=> const FacultyMainScreen()));
+                        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>  FacultyMainScreen()));
                       }
                       else{
                         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Enter Valid UserName")));

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:hybrid_learning_application/LoginOptions.dart';
+import 'package:hybrid_learning_application/loginoptions.dart';
 import 'package:flutter/services.dart';
-
-
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
@@ -16,4 +14,3 @@ void main() {
     },
   ));
 }
-

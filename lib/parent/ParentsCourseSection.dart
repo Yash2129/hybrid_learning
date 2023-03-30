@@ -1,3 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 
 class ParentsCourseSection extends StatefulWidget {
@@ -8,168 +11,58 @@ class ParentsCourseSection extends StatefulWidget {
 }
 
 class _ParentsCourseSectionState extends State<ParentsCourseSection> {
+  final user = FirebaseAuth.instance.currentUser;
+
+  late String uid;
+  final ref=FirebaseDatabase.instance.ref('Subjects');
+
+  late String year;
+
+
   @override
   Widget build(BuildContext context) {
-
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
+    final user = this.user;
+    if (user != null) {
+      uid = user.uid;
+    }
+
+    //Reading class value from realtime database
+
+    final r=FirebaseDatabase.instance.ref('Profiles').child(uid).child('Class');
+    r.once().then((DatabaseEvent event) {
+      //print('Data : ${event.snapshot.value}');
+      String y = event.snapshot.value.toString();
+      String yr = y.substring(0, 2);
+      setState(() {
+        year=yr;
+      });
+    });
+
+
+
+
     return Scaffold(
 
-      body: SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children:[
+      body: Column(
+        children: [
+          Expanded(
+              child: FirebaseAnimatedList(
+                  query: ref.child(year),
+                  itemBuilder: (context, snapshot, animation, index){
+                    return ListTile(
+                      title:Text(snapshot.key.toString()),
+                      subtitle: Text(snapshot.value.toString()),
+                    );
 
-              Container(
-                padding: EdgeInsets.only(left: 10,top: 10),
-                alignment: Alignment.topLeft,
-                child: Icon(Icons.arrow_back_ios,size: 30),
-              ),
 
+                  })
+          ),
 
-              //BOX names
-              SizedBox(height: height*0.03),
-              Container(
-                alignment: Alignment.centerLeft,
-                padding: EdgeInsets.only(left: 20,top: 10,bottom: 10),
-                height: height*0.09,
-                width: width*0.9,
-                decoration: BoxDecoration(
-                    color: Color(0xFF8ECEFF),
-                    borderRadius: BorderRadius.circular(15)
-                ),
-
-                child: Text('Subject',style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.w700
-                ),),
-              ),
-              SizedBox(height: height*0.05),
-
-              Container(
-                alignment: Alignment.centerLeft,
-                padding: EdgeInsets.only(left: 20,top: 10,bottom: 10),
-                height: height*0.09,
-                width: width*0.9,
-                decoration: BoxDecoration(
-                    color: Color(0xFF8ECEFF),
-                    borderRadius: BorderRadius.circular(15)
-                ),
-
-                child: Text('Subject',style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.w700
-                ),),
-              ),
-              SizedBox(height: height*0.05),
-
-              Container(
-                alignment: Alignment.centerLeft,
-                padding: EdgeInsets.only(left: 20,top: 10,bottom: 10),
-                height: height*0.09,
-                width: width*0.9,
-                decoration: BoxDecoration(
-                    color: Color(0xFF8ECEFF),
-                    borderRadius: BorderRadius.circular(15)
-                ),
-
-                child: Text('Subject',style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.w700
-                ),),
-              ),
-              SizedBox(height: height*0.05),
-
-              Container(
-                alignment: Alignment.centerLeft,
-                padding: EdgeInsets.only(left: 20,top: 10,bottom: 10),
-                height: height*0.09,
-                width: width*0.9,
-                decoration: BoxDecoration(
-                    color: Color(0xFF8ECEFF),
-                    borderRadius: BorderRadius.circular(15)
-                ),
-
-                child: Text('Subject',style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.w700
-                ),),
-              ),
-              SizedBox(height: height*0.05),
-
-              Container(
-                alignment: Alignment.centerLeft,
-                padding: EdgeInsets.only(left: 20,top: 10,bottom: 10),
-                height: height*0.09,
-                width: width*0.9,
-                decoration: BoxDecoration(
-                    color: Color(0xFF8ECEFF),
-                    borderRadius: BorderRadius.circular(15)
-                ),
-
-                child: Text('Subject',style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.w700
-                ),),
-              ),
-              SizedBox(height: height*0.05),
-
-              Container(
-                alignment: Alignment.centerLeft,
-                padding: EdgeInsets.only(left: 20,top: 10,bottom: 10),
-                height: height*0.09,
-                width: width*0.9,
-                decoration: BoxDecoration(
-                    color: Color(0xFF8ECEFF),
-                    borderRadius: BorderRadius.circular(15)
-                ),
-
-                child: Text('Subject',style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.w700
-                ),),
-              ),
-              SizedBox(height: height*0.05),
-
-              Container(
-                alignment: Alignment.centerLeft,
-                padding: EdgeInsets.only(left: 20,top: 10,bottom: 10),
-                height: height*0.09,
-                width: width*0.9,
-                decoration: BoxDecoration(
-                    color: Color(0xFF8ECEFF),
-                    borderRadius: BorderRadius.circular(15)
-                ),
-
-                child: Text('Subject',style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.w700
-                ),),
-              ),
-              SizedBox(height: height*0.05),
-
-              Container(
-                alignment: Alignment.centerLeft,
-                padding: EdgeInsets.only(left: 20,top: 10,bottom: 10),
-                height: height*0.09 ,
-                width: width*0.9,
-                decoration: BoxDecoration(
-                    color: Color(0xFF8ECEFF),
-                    borderRadius: BorderRadius.circular(15)
-                ),
-
-                child: Text('Subject',style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.w700
-                ),),
-              ),
-              SizedBox(height: height*0.05),
-
-            ]
-        ),
-
+        ],
       ),
+
     );
   }
 }
