@@ -29,6 +29,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  file_picker: 5.2.2
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -41,6 +42,11 @@ dependencies:
   sql_conn: ^0.0.3
   sqflite: ^2.0.3+1
   firebase_database: ^10.0.9
+  path_provider: ^2.0.14 #store file on device
+  dio: ^5.1.1 #store file  on device
+  gallery_saver: ^2.3.2 #save file in gallery
+  pie_chart: ^5.3.2
+
 
 
 dev_dependencies:

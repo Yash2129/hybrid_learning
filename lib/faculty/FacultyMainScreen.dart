@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hybrid_learning_application/faculty/FacultyProfileView.dart';
-import 'package:hybrid_learning_application/faculty/FacultySettings.dart';
 import 'package:hybrid_learning_application/faculty/TeacherAttendanceSection.dart';
 import 'package:hybrid_learning_application/faculty/TeacherCourseSection.dart';
 import 'package:hybrid_learning_application/faculty/TeacherExaminationSection.dart';
@@ -70,7 +69,7 @@ class _FacultyMainScreenState extends State<FacultyMainScreen> {
                       InkWell(
                         onTap: () => Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => const FacultySettings()),
+                          MaterialPageRoute(builder: (context) => FacultyProfileView()),
                         ),
                         child: Container(
 

@@ -35,8 +35,10 @@ class _TeacherAttendanceSectionState extends State<TeacherAttendanceSection> {
 
                     Navigator.of(context).push(MaterialPageRoute(builder: (context)=>SubjectScreen(classDiv: snapshot.key.toString()))),
 
-                    child: Container(
+                    child:
+                    Container(
                       alignment: Alignment.centerLeft,
+                      margin: EdgeInsets.only(top: 20, left: 30, right: 20),
                       padding: EdgeInsets.only(left: 20,top: 10,bottom: 10),
                       height: height*0.09,
                       width: width*0.9,

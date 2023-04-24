@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hybrid_learning_application/faculty/ParentsInteractionSection.dart';
+import 'package:hybrid_learning_application/parent/ParentProfileView.dart';
 import 'package:hybrid_learning_application/parent/ParentsAttendanceSection.dart';
 import 'package:hybrid_learning_application/parent/ParentsCourseSection.dart';
 import 'package:hybrid_learning_application/parent/ParentsExaminationSection.dart';
 import 'package:hybrid_learning_application/parent/ParentsNoticeSection.dart';
-import 'package:hybrid_learning_application/parent/ParentsSettings.dart';
 import 'package:hybrid_learning_application/parent/ParentsStudentPerformanceSection.dart';
 
 class ParentMainScreen extends StatefulWidget {
@@ -65,7 +65,7 @@ class _ParentMainScreenState extends State<ParentMainScreen> {
                     InkWell(
                       onTap: () => Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const ParentsSettings()),
+                        MaterialPageRoute(builder: (context) => ParentProfileView()),
                       ),
                       child: Container(
 

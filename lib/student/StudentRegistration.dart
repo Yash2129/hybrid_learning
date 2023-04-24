@@ -349,6 +349,8 @@ class _StudentRegistrationState extends State<StudentRegistration> {
                             "UID": value.user?.uid
                           });
 
+
+
                           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Student info created")));
                           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> StudentLogin()));
                         });

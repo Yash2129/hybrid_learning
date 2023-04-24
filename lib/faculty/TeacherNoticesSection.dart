@@ -19,18 +19,31 @@ class _TeacherNoticesSectionState extends State<TeacherNoticesSection> {
     return Scaffold(
       body: ListView(
         children: [
-          TextFormField(
-            controller: _textupdatecontroller,
-            minLines: 2,
-            maxLines: 100,
-            keyboardType: TextInputType.multiline,
-            decoration: InputDecoration(
-              hintText: 'Enter Notice',
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(10)),
+          Container(
+            padding: EdgeInsets.only(top: 30, left: 30,bottom: 20),
+            child: const Text("Notice Upload",
+              style: TextStyle(
+            fontFamily: 'Quicksand_Bold',
+            fontWeight: FontWeight.w900,
+            color: Color(0xFF244462),
+            fontSize: 30),),
+          ),
+          Container(
+            padding: EdgeInsets.only(top: 20, left: 30,right: 30),
+            child: TextFormField(
+              controller: _textupdatecontroller,
+              minLines: 2,
+              maxLines: 100,
+              keyboardType: TextInputType.multiline,
+              decoration: InputDecoration(
+                hintText: 'Enter Notice',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                ),
               ),
             ),
           ),
+
           Container(
             padding: const EdgeInsets.only(top: 20),
             decoration: const BoxDecoration(

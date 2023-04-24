@@ -1,3 +1,7 @@
+
+import 'dart:io';
+import 'package:file_picker/file_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
 class TeacherOnlineResources extends StatefulWidget {
@@ -8,276 +12,233 @@ class TeacherOnlineResources extends StatefulWidget {
 }
 
 class _TeacherOnlineResourcesState extends State<TeacherOnlineResources> {
+
+  final List<String> Year=['FE','SE','TE','BE'];
+  final List<String> FEsub=['EM1','Physics'];
+  final List<String> SEsub=['DS','AOA'];
+  final List<String> TEsub=['AI','CSS'];
+  final List<String> BEsub=['ML','NLP'];
+
+  late var y;
+  late var s;
+
+  String selectedYear='FE';
+  String selectedSubejct='EM1';
+  List<String> sub=[];
+
+  _subDependentDropDown(year)
+  {
+    if(year=='FE'){
+      sub=FEsub;
+    }else if(year=='SE')
+    {
+      sub=SEsub;
+    }
+    else if(year=='TE')
+    {
+      sub=TEsub;
+    }
+    else
+    {
+      sub=BEsub;
+    }
+    selectedSubejct=sub.first.toString();
+
+  }
+  PlatformFile? pickedFile;
+  UploadTask? uploadTask;
+  Future pickFile() async
+  {
+    final result=await FilePicker.platform.pickFiles();
+    if(result==null) return;
+    setState(() {
+      pickedFile=result.files.first;
+    });
+
+  }
+  uploadFile() async
+  {
+
+    final path='${selectedYear}/${pickedFile!.name}';
+    final file= File(pickedFile!.path!);
+
+    final ref=FirebaseStorage.instance.ref().child(path);
+    ref.putFile(file);
+    setState(() {
+      pickedFile=null;
+    });
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Uploaded")));
+
+
+  }
+
+
   @override
   Widget build(BuildContext context) {
 
+
+    TextEditingController _textupdatecontroller=TextEditingController();
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
 
     return Scaffold(
-        backgroundColor: Colors.white,
-        body: SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
+        body: ListView(
+          children: [
+            Container(
+              padding: EdgeInsets.only(top: 30, left: 30,bottom: 20),
+              child: const Text("Online Resource Upload",
+                style: TextStyle(
+                    fontFamily: 'Quicksand_Bold',
+                    fontWeight: FontWeight.w900,
+                    color: Color(0xFF244462),
+                    fontSize: 30),),
+            ),
+            Row(
+              children: [
+                Container(
+                  height: 30,
+                  width: 65,
+                  padding: EdgeInsets.only(left: 20),
+                  child: Text("Year",
+                    style: TextStyle(
+                        fontFamily: 'Quicksand_Bold',
+                        fontWeight: FontWeight.w900,
+                        color: Color(0xFF244462),
+                        fontSize: 16),),
+                ),
+                SizedBox(
+                  width: 30,
+                  height: 30,
+                ),
+                DropdownButton<String>(
+                  alignment: Alignment.center,
+                  value:selectedYear,
+                  items: Year.map((e){
+                    return DropdownMenuItem<String>(
+                      value: e,
+                      child: Text('$e',
+                        style: TextStyle(
+                            fontFamily: 'Quicksand_Bold',
+                            fontWeight: FontWeight.w100,
+                            color: Color(0xFF244462),
+                            fontSize: 16),),
+                    );
+                  }).toList(),
+                  onChanged: (newValueSelected){
+                    setState(() {
+                      _subDependentDropDown(newValueSelected);
+                      selectedYear = "$newValueSelected";
+                      y=newValueSelected;
+                    });
+                  },
+                ),
 
-              Container(
-                padding: EdgeInsets.only(left: 10,top: 10),
-                alignment: Alignment.topLeft,
-                child: Icon(Icons.arrow_back_ios,size: 30),
+                //Subject
+
+                SizedBox(
+                  width: 30,
+                  height: 30,
+                ),
+                Container(
+                  height: 30,
+                  width: 85,
+                  padding: EdgeInsets.only(left: 20),
+                  child: Text("Subject",
+                    style: TextStyle(
+                        fontFamily: 'Quicksand_Bold',
+                        fontWeight: FontWeight.w900,
+                        color: Color(0xFF244462),
+                        fontSize: 16),),
+                ),
+                SizedBox(
+                  width: 30,
+                  height: 30,
+                ),
+                DropdownButton<String>(
+                  alignment: Alignment.center,
+                  value:selectedSubejct,
+                  items: sub.map((e){
+                    return DropdownMenuItem<String>(
+                      value: e,
+                      child: Text('$e',style: TextStyle(
+                          fontFamily: 'Quicksand_Bold',
+                          fontWeight: FontWeight.w100,
+                          color: Color(0xFF244462),
+                          fontSize: 16),),
+                    );
+                  }).toList(),
+                  onChanged: (String? newValueSelected){
+                    setState(() {
+                      selectedSubejct = newValueSelected!;
+                      s=newValueSelected;
+                    });
+                  },
+                ),
+              ],
+            ),
+            if(pickedFile!=null)
+              Expanded(
+                  child: Container(
+                    color: Colors.blue[100],
+                    child: Center(
+                      child: Text(pickedFile!.name),
+                    ),
+                  )
               ),
 
-
-              //BOX names
-              SizedBox(height: height*0.03),
-              //E Notes
-              InkWell(
-
-                child: Container(
-                  height: 230,
-
-                  child: Stack(
-                    children: [
-                      Positioned(top:35,left:20,child: Material(
-                        child: Container(
-                          height: 180.0,
-                          width: width*0.9,
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(0.0),
-                              boxShadow: [BoxShadow(
-                                  color: Colors.grey.withOpacity(0.3),
-                                  blurRadius: 20,
-                                  spreadRadius: 4.0,
-                                  offset: const Offset(-10,10)
-                              )]
-                          ),
-
-                        ),
-                      )),
-
-                      Positioned(
-                          top: 0,
-                          left: 30,
-                          child: Card(
-
-                            elevation: 10,
-                            shadowColor: Colors.grey.withOpacity(0.6),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20)
-                            ),
-                            child: Container(
-                              height: 200,
-                              width: 150,
-
-                              decoration: BoxDecoration(
-                                  color: Color(0xFF8ECEFF),
-                                  borderRadius: BorderRadius.circular(10),
-                                  image: const DecorationImage(
-                                      fit: BoxFit.contain,
-                                      image: AssetImage("assets/images/eNotes.png")
-                                  )
-                              ),
-                            ),
-                          )
-
-                      ),
-
-
-                      Positioned(
-                          top: 40,
-                          left: 160,
-                          child: Container(
-                            height: 180,
-                            width: 200,
-                            padding: EdgeInsets.only(left: 40),
-                            alignment: Alignment.center,
-                            child: const Text("E-Notes               ",
-                              style: TextStyle(
-                                  color: Color(0xFF244462),
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: 'Quicksand_Bold'),),
-                          )
-                      )
-
-
-                    ],
-                  ),
+            Container(
+    padding: const EdgeInsets.only(top: 20),
+    decoration: const BoxDecoration(
+    borderRadius: BorderRadius.all(Radius.circular(10)),
+    boxShadow: [BoxShadow(
+    color: Color(0xFFE3E3E3),
+    blurRadius: 40,
+    offset: Offset(0,20)
+    )]
+    ),
+    alignment: Alignment.topCenter,
+    child: OutlinedButton(
+    style: OutlinedButton.styleFrom(
+    elevation: 6,
+    padding: const EdgeInsets.symmetric(horizontal: 132, vertical: 12),
+    backgroundColor: const Color(0xFF0090FF),
+    shape: RoundedRectangleBorder(
+    borderRadius: BorderRadius.circular(15))),
+    onPressed: () {  },
+    child: const Text(
+    'Select File',
+    style: TextStyle(fontSize: 20, color: Colors.white,fontFamily: 'Quicksand_Bold')
+    ),
+    ),
+    ),
+            Container(
+              padding: const EdgeInsets.only(top: 20),
+              decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  boxShadow: [BoxShadow(
+                      color: Color(0xFFE3E3E3),
+                      blurRadius: 40,
+                      offset: Offset(0,20)
+                  )]
+              ),
+              alignment: Alignment.topCenter,
+              child: OutlinedButton(
+                style: OutlinedButton.styleFrom(
+                    elevation: 6,
+                    padding: const EdgeInsets.symmetric(horizontal: 132, vertical: 12),
+                    backgroundColor: const Color(0xFF0090FF),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15))),
+                onPressed: () {
+                  uploadFile();
+                },
+                child: const Text(
+                    'Upload File',
+                    style: TextStyle(fontSize: 20, color: Colors.white,fontFamily: 'Quicksand_Bold')
                 ),
               ),
-
-              SizedBox(height: height*0.05),
-
-
-              //E Books
-              InkWell(
-
-                child: Container(
-                  height: 230,
-
-                  child: Stack(
-                    children: [
-                      Positioned(top:35,left:20,child: Material(
-                        child: Container(
-                          height: 180.0,
-                          width: width*0.9,
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(0.0),
-                              boxShadow: [BoxShadow(
-                                  color: Colors.grey.withOpacity(0.3),
-                                  blurRadius: 20,
-                                  spreadRadius: 4.0,
-                                  offset: const Offset(-10,10)
-                              )]
-                          ),
-
-                        ),
-                      )),
-
-                      Positioned(
-                          top: 0,
-                          left: 30,
-                          child: Card(
-
-                            elevation: 10,
-                            shadowColor: Colors.grey.withOpacity(0.6),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20)
-                            ),
-                            child: Container(
-                              height: 200,
-                              width: 150,
-
-                              decoration: BoxDecoration(
-                                  color: Color(0xFF244462),
-                                  borderRadius: BorderRadius.circular(10),
-                                  image: const DecorationImage(
-                                      fit: BoxFit.contain,
-                                      image: AssetImage("assets/images/eBooks.png")
-                                  )
-                              ),
-                            ),
-                          )
-
-                      ),
-
-
-                      Positioned(
-                          top: 40,
-                          left: 160,
-                          child: Container(
-                            height: 180,
-                            width: 200,
-                            padding: EdgeInsets.only(left: 40),
-                            alignment: Alignment.center,
-                            child: const Text("E-Books                ",
-                              style: TextStyle(
-                                  color: Color(0xFF244462),
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: 'Quicksand_Bold'),),
-                          )
-                      )
-
-
-                    ],
-                  ),
-                ),
-              ),
-
-
-              SizedBox(height: height*0.05),
-
-
-
-              //Recorded Lectures
-              InkWell(
-
-                child: Container(
-                  height: 230,
-
-                  child: Stack(
-                    children: [
-                      Positioned(top:35,left:20,child: Material(
-                        child: Container(
-                          height: 180.0,
-                          width: width*0.9,
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(0.0),
-                              boxShadow: [BoxShadow(
-                                  color: Colors.grey.withOpacity(0.3),
-                                  blurRadius: 20,
-                                  spreadRadius: 4.0,
-                                  offset: const Offset(-10,10)
-                              )]
-                          ),
-
-                        ),
-                      )),
-
-                      Positioned(
-                          top: 0,
-                          left: 30,
-                          child: Card(
-
-                            elevation: 10,
-                            shadowColor: Colors.grey.withOpacity(0.6),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20)
-                            ),
-                            child: Container(
-                              height: 200,
-                              width: 150,
-
-                              decoration: BoxDecoration(
-                                  color: Color(0xFF8ECEFF),
-                                  borderRadius: BorderRadius.circular(10),
-                                  image: const DecorationImage(
-                                      fit: BoxFit.contain,
-                                      image: AssetImage("assets/images/recordedLectures.png")
-                                  )
-                              ),
-                            ),
-                          )
-
-                      ),
-
-
-                      Positioned(
-                          top: 40,
-                          left: 160,
-                          child: Container(
-                            height: 180,
-                            width: 200,
-                            padding: EdgeInsets.only(left: 40),
-                            alignment: Alignment.center,
-                            child: const Text("Recorded Lectures",
-                              style: TextStyle(
-                                  color: Color(0xFF244462),
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: 'Quicksand_Bold'),),
-                          )
-                      )
-
-
-                    ],
-                  ),
-                ),
-              ),
-
-
-              SizedBox(height: height*0.05),
-
-
-
-
-            ],
-          ),
+            ),
+          ],
         )
 
     );

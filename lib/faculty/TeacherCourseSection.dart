@@ -54,9 +54,29 @@ class _TeacherCourseSectionState extends State<TeacherCourseSection> {
     return Scaffold(
       body: ListView(
         children: [
+          Container(
+            alignment: Alignment.center,
+            padding: EdgeInsets.only(top: 30,bottom: 20),
+            child: const Text("Course Update",
+              style: TextStyle(
+                  fontFamily: 'Quicksand_Bold',
+                  fontWeight: FontWeight.w900,
+                  color: Color(0xFF244462),
+                  fontSize: 30),),
+          ),
           Row(
             children: [
-              Text("Year"),
+              Container(
+                height: 30,
+                width: 65,
+                padding: EdgeInsets.only(left: 20),
+                child: Text("Year",
+                  style: TextStyle(
+                      fontFamily: 'Quicksand_Bold',
+                      fontWeight: FontWeight.w900,
+                      color: Color(0xFF244462),
+                      fontSize: 16),),
+              ),
               SizedBox(
                 width: 30,
                 height: 30,
@@ -67,7 +87,11 @@ class _TeacherCourseSectionState extends State<TeacherCourseSection> {
                 items: Year.map((e){
                       return DropdownMenuItem<String>(
                         value: e,
-                        child: Text('$e'),
+                        child: Text('$e',style: TextStyle(
+                            fontFamily: 'Quicksand_Bold',
+                            fontWeight: FontWeight.w100,
+                            color: Color(0xFF244462),
+                            fontSize: 16),),
                       );
                 }).toList(),
                 onChanged: (newValueSelected){
@@ -85,7 +109,17 @@ class _TeacherCourseSectionState extends State<TeacherCourseSection> {
                 width: 30,
                 height: 30,
               ),
-              Text("Subject"),
+              Container(
+                height: 30,
+                width: 85,
+                padding: EdgeInsets.only(left: 20),
+                child: Text("Subject",
+                  style: TextStyle(
+                      fontFamily: 'Quicksand_Bold',
+                      fontWeight: FontWeight.w900,
+                      color: Color(0xFF244462),
+                      fontSize: 16),),
+              ),
               SizedBox(
                 width: 30,
                 height: 30,
@@ -96,7 +130,12 @@ class _TeacherCourseSectionState extends State<TeacherCourseSection> {
                 items: sub.map((e){
                   return DropdownMenuItem<String>(
                     value: e,
-                    child: Text('$e'),
+                    child: Text('$e',
+                      style: TextStyle(
+                          fontFamily: 'Quicksand_Bold',
+                          fontWeight: FontWeight.w100,
+                          color: Color(0xFF244462),
+                          fontSize: 16),),
                   );
                 }).toList(),
                 onChanged: (String? newValueSelected){
@@ -109,15 +148,18 @@ class _TeacherCourseSectionState extends State<TeacherCourseSection> {
             ],
           ),
 
-          TextFormField(
-            controller: _textupdatecontroller,
-            minLines: 2,
-            maxLines: 100,
-            keyboardType: TextInputType.multiline,
-            decoration: InputDecoration(
-              hintText: 'Enter Course Update here',
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(10)),
+          Container(
+            padding: EdgeInsets.only(top: 20, left: 30,right: 30),
+            child: TextFormField(
+              controller: _textupdatecontroller,
+              minLines: 2,
+              maxLines: 100,
+              keyboardType: TextInputType.multiline,
+              decoration: InputDecoration(
+                hintText: 'Enter Course Update',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                ),
               ),
             ),
           ),

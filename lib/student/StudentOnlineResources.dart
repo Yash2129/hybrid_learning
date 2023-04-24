@@ -1,4 +1,13 @@
+import 'dart:io';
+
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:dio/dio.dart';
+import 'package:gallery_saver/gallery_saver.dart';
+import 'package:path_provider/path_provider.dart';
+
 
 class StudentOnlineResources extends StatefulWidget {
   const StudentOnlineResources({Key? key}) : super(key: key);
@@ -8,278 +17,115 @@ class StudentOnlineResources extends StatefulWidget {
 }
 
 class _StudentOnlineResourcesState extends State<StudentOnlineResources> {
+
+
+  Future<ListResult>? futureFiles;
+  Map<int,double> downloadProgress={};
+
+  final user = FirebaseAuth.instance.currentUser;
+
+  late String uid;
+  final ref=FirebaseDatabase.instance.ref('Subjects');
+  String year='';
+
+
   @override
+
   Widget build(BuildContext context) {
 
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
 
+    final user = this.user;
+    if (user != null) {
+      uid = user.uid;
+    }
+    //Reading class value from realtime database
+    final r=FirebaseDatabase.instance.ref('Profiles').child(uid).child('Class');
+    r.once().then((DatabaseEvent event) {
+      //print('Data : ${event.snapshot.value}');
+      String y = event.snapshot.value.toString();
+      String yr = y.substring(0, 2);
+      setState(() {
+        year=yr;
+      });
+    });
+    setState(() {
+      futureFiles = FirebaseStorage.instance.ref('/$year').listAll();
+    });
+
     return Scaffold(
-        backgroundColor: Colors.white,
-        body: SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
+      appBar: AppBar(
+        title: const Text('Download Files'),
+      ),
+      body: FutureBuilder<ListResult>(
+        future: futureFiles,
+        builder: (context,snapshot) {
+          if(snapshot.hasData){
+            final files=snapshot.data!.items;
 
-              Container(
-                padding: EdgeInsets.only(left: 10,top: 10),
-                alignment: Alignment.topLeft,
-                child: Icon(Icons.arrow_back_ios,size: 30),
-              ),
+            return ListView.builder(
+                itemCount: files.length,
+                itemBuilder: (context,index){
+                  final file=files[index];
+                  double? progress =downloadProgress[index];
 
-
-              //BOX names
-              SizedBox(height: height*0.03),
-              //E Notes
-              InkWell(
-
-                child: Container(
-                  height: 230,
-
-                  child: Stack(
-                    children: [
-                      Positioned(top:35,left:20,child: Material(
-                        child: Container(
-                          height: 180.0,
-                          width: width*0.9,
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(0.0),
-                              boxShadow: [BoxShadow(
-                                  color: Colors.grey.withOpacity(0.3),
-                                  blurRadius: 20,
-                                  spreadRadius: 4.0,
-                                  offset: const Offset(-10,10)
-                              )]
-                          ),
-
-                        ),
-                      )),
-
-                      Positioned(
-                          top: 0,
-                          left: 30,
-                          child: Card(
-
-                            elevation: 10,
-                            shadowColor: Colors.grey.withOpacity(0.6),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20)
-                            ),
-                            child: Container(
-                              height: 200,
-                              width: 150,
-
-                              decoration: BoxDecoration(
-                                  color: Color(0xFF8ECEFF),
-                                  borderRadius: BorderRadius.circular(10),
-                                  image: const DecorationImage(
-                                      fit: BoxFit.contain,
-                                      image: AssetImage("assets/images/eNotes.png")
-                                  )
-                              ),
-                            ),
-                          )
-
+                  return ListTile(
+                    title: Text(file.name),
+                    subtitle: progress!=null
+                        ? LinearProgressIndicator(
+                      value: progress,
+                      backgroundColor: Colors.black26,
+                    )
+                        :null,
+                    trailing: IconButton(
+                      icon: const Icon(
+                        Icons.download,
+                        color: Colors.black,
                       ),
+                      onPressed: () => downloadFile(index,file),
+                    ),
+                  );
+
+                }
+            );
 
 
-                      Positioned(
-                          top: 40,
-                          left: 160,
-                          child: Container(
-                            height: 180,
-                            width: 200,
-                            padding: EdgeInsets.only(left: 40),
-                            alignment: Alignment.center,
-                            child: const Text("E-Notes               ",
-                              style: TextStyle(
-                                  color: Color(0xFF244462),
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: 'Quicksand_Bold'),),
-                          )
-                      )
+          } else if(snapshot.hasError){
+            return const Center(child: Text('Error occurred'));
+          }else{
+            return const Center(child: CircularProgressIndicator());
+          }
+        },
+      ),
+    );
+
+  }
+  Future downloadFile(int index,Reference ref) async{
+    //Not visible to user
 
 
-                    ],
-                  ),
-                ),
-              ),
+    final url= await ref.getDownloadURL();
+    final tempDir = await getTemporaryDirectory();
+    final path='${tempDir.path}/${ref.name}';
+    await Dio().download(
+        url,
+        path,
+        onReceiveProgress: (received,total){
+          double progress=  received/total;
+          setState(() {
+            downloadProgress[index] =progress;
+          });
+        }
+    );
 
-              SizedBox(height: height*0.05),
-
-
-              //E Books
-              InkWell(
-
-                child: Container(
-                  height: 230,
-
-                  child: Stack(
-                    children: [
-                      Positioned(top:35,left:20,child: Material(
-                        child: Container(
-                          height: 180.0,
-                          width: width*0.9,
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(0.0),
-                              boxShadow: [BoxShadow(
-                                  color: Colors.grey.withOpacity(0.3),
-                                  blurRadius: 20,
-                                  spreadRadius: 4.0,
-                                  offset: const Offset(-10,10)
-                              )]
-                          ),
-
-                        ),
-                      )),
-
-                      Positioned(
-                          top: 0,
-                          left: 30,
-                          child: Card(
-
-                            elevation: 10,
-                            shadowColor: Colors.grey.withOpacity(0.6),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20)
-                            ),
-                            child: Container(
-                              height: 200,
-                              width: 150,
-
-                              decoration: BoxDecoration(
-                                  color: Color(0xFF244462),
-                                  borderRadius: BorderRadius.circular(10),
-                                  image: const DecorationImage(
-                                      fit: BoxFit.contain,
-                                      image: AssetImage("assets/images/eBooks.png")
-                                  )
-                              ),
-                            ),
-                          )
-
-                      ),
-
-
-                      Positioned(
-                          top: 40,
-                          left: 160,
-                          child: Container(
-                            height: 180,
-                            width: 200,
-                            padding: EdgeInsets.only(left: 40),
-                            alignment: Alignment.center,
-                            child: const Text("E-Books                ",
-                              style: TextStyle(
-                                  color: Color(0xFF244462),
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: 'Quicksand_Bold'),),
-                          )
-                      )
-
-
-                    ],
-                  ),
-                ),
-              ),
-
-
-              SizedBox(height: height*0.05),
-
-
-
-              //Recorded Lectures
-              InkWell(
-
-                child: Container(
-                  height: 230,
-
-                  child: Stack(
-                    children: [
-                      Positioned(top:35,left:20,child: Material(
-                        child: Container(
-                          height: 180.0,
-                          width: width*0.9,
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(0.0),
-                              boxShadow: [BoxShadow(
-                                  color: Colors.grey.withOpacity(0.3),
-                                  blurRadius: 20,
-                                  spreadRadius: 4.0,
-                                  offset: const Offset(-10,10)
-                              )]
-                          ),
-
-                        ),
-                      )),
-
-                      Positioned(
-                          top: 0,
-                          left: 30,
-                          child: Card(
-
-                            elevation: 10,
-                            shadowColor: Colors.grey.withOpacity(0.6),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20)
-                            ),
-                            child: Container(
-                              height: 200,
-                              width: 150,
-
-                              decoration: BoxDecoration(
-                                  color: Color(0xFF8ECEFF),
-                                  borderRadius: BorderRadius.circular(10),
-                                  image: const DecorationImage(
-                                      fit: BoxFit.contain,
-                                      image: AssetImage("assets/images/recordedLectures.png")
-                                  )
-                              ),
-                            ),
-                          )
-
-                      ),
-
-
-                      Positioned(
-                          top: 40,
-                          left: 160,
-                          child: Container(
-                            height: 180,
-                            width: 200,
-                            padding: EdgeInsets.only(left: 40),
-                            alignment: Alignment.center,
-                            child: const Text("Recorded Lectures",
-                              style: TextStyle(
-                                  color: Color(0xFF244462),
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: 'Quicksand_Bold'),),
-                          )
-                      )
-
-
-                    ],
-                  ),
-                ),
-              ),
-
-
-              SizedBox(height: height*0.05),
-
-
-
-
-            ],
-          ),
-        )
-
+    if(url.contains('.jpg')){
+      await GallerySaver.saveImage(path,toDcim: true);
+    }else if(url.contains('.mp4')){
+      await GallerySaver.saveVideo(path,toDcim: true);
+    }
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Downloaded ${ref.name}')),
     );
   }
 }

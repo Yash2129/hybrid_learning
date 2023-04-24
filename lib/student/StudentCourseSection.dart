@@ -15,7 +15,7 @@ class _StudentCourseSectionState extends State<StudentCourseSection> {
 
   late String uid;
   final ref=FirebaseDatabase.instance.ref('Subjects');
- late String year;
+  String year = '';
 
   @override
   Widget build(BuildContext context) {
@@ -39,20 +39,44 @@ class _StudentCourseSectionState extends State<StudentCourseSection> {
 
 
 
-    
+
 
 
     return Scaffold(
 
       body: Column(
         children: [
+          SizedBox(
+            height: 50,
+            width: 30,
+          ),
+          Container(
+              height: height*0.1,
+              width: width*0.9,
+              child: const Text('Course Update',
+                style: TextStyle(
+                    fontFamily: 'Quicksand_Bold',
+                    fontWeight: FontWeight.w900,
+                    color: Color(0xFF244462),
+                    fontSize: 30),)
+          ),
           Expanded(
               child: FirebaseAnimatedList(
                   query: ref.child(year),
                   itemBuilder: (context, snapshot, animation, index){
                     return ListTile(
-                      title:Text(snapshot.key.toString()),
-                      subtitle: Text(snapshot.value.toString()),
+                      title:Text(snapshot.key.toString(),
+                        style: const TextStyle(
+                            fontFamily: 'Quicksand_Bold',
+                            fontWeight: FontWeight.w900,
+                            color: Color(0xFF244462),
+                            fontSize: 18),),
+                      subtitle: Text(snapshot.value.toString(),
+                        style: const TextStyle(
+                            fontFamily: 'Quicksand_Bold',
+                            fontWeight: FontWeight.w200,
+                            color: Color(0xFF244462),
+                            fontSize: 16),),
                     );
 
 
@@ -63,5 +87,6 @@ class _StudentCourseSectionState extends State<StudentCourseSection> {
       ),
 
     );
+
   }
 }
